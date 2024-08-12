@@ -1,0 +1,8 @@
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/core/EndoscopeCoreConfiguration.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/exceptions/GlobalExceptionHandler.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/Main.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/auth/SecurityConfiguration.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/api/EndoscopeApiConfiguration.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/auth/JwtAuthenticationFilter.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/output/EndoscopeOutputConfiguration.java
+/Users/joaomachado/workspace/endoscope/backend/endoscope/endoscope-application/src/main/java/org/example/endoscope/application/spring/configuration/auth/EndoscopeAuthConfiguration.java

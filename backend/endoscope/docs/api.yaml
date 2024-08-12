@@ -1,0 +1,654 @@
+openapi: 3.0.3
+
+info:
+  title: API for endoscope
+  description: API for endoscope
+  contact:
+    name: endoscope
+    email: endoscope@localhost
+  version: 1.0.0
+
+tags:
+  - name: directory
+    description: directory API
+  - name: image
+    description: image API
+  - name: auth
+    description: auth API
+
+paths:
+
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      description: Register a new user
+      operationId: registerUser
+      requestBody:
+        description: User registration data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+      responses:
+        '200':
+          description: User registered successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Authenticate user and generate JWT token
+      description: Authenticate user with email and password, and generate JWT token
+      operationId: loginUser
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /auth/generateBackUp:
+    post:
+      tags:
+        - auth
+      summary: Generate backup of the database
+      description: Generate backup of the database
+      operationId: generateBackUp
+      responses:
+        '200':
+          description: Backup generated successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /auth/uploadBackup:
+    post:
+      tags:
+        - auth
+      summary: Upload backup of the database
+      description: Upload backup of the database
+      operationId: uploadBackUp
+      responses:
+        '200':
+          description: Backup upload successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  #############################
+  # Directory API             #
+  #############################
+
+  /directories:
+    get:
+      tags:
+        - directory
+      summary: Get directories
+      description: Get directories
+      operationId: getDirectories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DirectoryEntity'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - directory
+      summary: Create directory
+      description: Create directory
+      operationId: createDirectory
+      requestBody:
+        description: Directory to create
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DirectoryEntity'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    post:
+      tags:
+        - directory
+      summary: Add or Edit description of directory
+      description: Add or Edit description of directory
+      operationId: addOrEditDirectoryDescription
+      requestBody:
+        description: Directory description to add or edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectoryDescriptionUpsert'
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /directories/{directoryId}:
+    get:
+      tags:
+        - directory
+      summary: Get directory by ID
+      description: Get directory by ID
+      operationId: getDirectoryById
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectoryEntity'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    post:
+      tags:
+        - directory
+      summary: Edit directory
+      description: Edit directory
+      operationId: editDirectory
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Directory to edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectoryEntityUpdate'
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - directory
+      summary: Delete directory
+      description: Delete directory
+      operationId: deleteDirectory
+      parameters:
+        - in: path
+          name: directoryId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /directories/subDirectories/{directoryId}:
+    get:
+      tags:
+        - directory
+      summary: Get sub directories
+      description: Get sub directories
+      operationId: getSubDirectories
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DirectoryEntity'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - directory
+      summary: Create sub directory
+      description: Create sub directory
+      operationId: createSubDirectory
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Sub Directory to create
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DirectoryEntity'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  #############################
+  # Image API                 #
+  #############################
+  /images:
+    post:
+      tags:
+        - image
+      summary: Edit description of Image
+      description: Edit description of Image
+      operationId: editImageDescription
+      requestBody:
+        description: Image description to edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageDescriptionUpsert'
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /images/{imageId}:
+    get:
+      tags:
+        - image
+      summary: Get image  by ID
+      description: Get image  by ID
+      operationId: getImageById
+      parameters:
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageEntity'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - image
+      summary: Delete image
+      description: Delete image
+      operationId: deleteImage
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /images/directory/{directoryId}:
+    get:
+      tags:
+        - image
+      summary: Get Images by directory ID
+      description: Get Images by directory ID
+      operationId: getImagesByDirectoryId
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImageEntity'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - image
+      summary: Create image in directory
+      description: Create image in directory
+      operationId: createImageInDirectory
+      parameters:
+        - name: directoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Image to create
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ImageEntity'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+#############################
+# Components                #
+#############################
+
+components:
+  schemas:
+    UserEntity:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: The user's ID
+        email:
+          type: string
+          format: email
+          description: The user's email address
+        password:
+          type: string
+          format: password
+          description: The user's password
+        salutation:
+          type: string
+          description: The user's salutation (e.g., Mr., Ms., Dr.)
+        gender:
+          type: string
+          description: The user's gender
+        fullName:
+          type: string
+          description: The user's full name
+        age:
+          type: string
+          description: The user's age
+        dateOfBirth:
+          type: string
+          format: date
+          description: The user's date of birth
+        countryOfOrigin:
+          type: string
+          description: The user's country of origin
+        workLocation:
+          type: string
+          description: The user's work location
+        workPlaceSetting:
+          type: string
+          description: The user's workplace setting
+        medicalId:
+          type: string
+          description: The user's medical ID
+        medicalSpeciality:
+          type: string
+          description: The user's medical specialty
+        education:
+          type: string
+          description: The user's education
+        role:
+          type: string
+          description: The user's role
+
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The user's token
+        password:
+          type: string
+          format: password
+          description: The user's password
+
+    UserLoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          format: string
+          description: The user's token
+        expiration:
+          type: long
+          description: The expiration time of the token
+        email:
+          type: string
+          format: string
+          description: The user's email
+        name:
+          type: string
+          format: string
+          description: The user's name
+        role:
+          type: string
+          format: string
+          description: The user's role
+
+    UnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+
+    DirectoryEntity:
+      type: object
+      properties:
+        directoryId:
+          type: integer
+          description: The directory ID
+        directoryName:
+          type: string
+          description: The directory name
+        directoryDescription:
+          type: string
+          description: The directory description
+        parentDirectory:
+          type: integer
+          description: The parent directory id
+        imageCount:
+          type: integer
+          description: The number of images in the directory
+        directoryPosition:
+          type: integer
+          description: The position of the directory
+
+    DirectoryEntityUpdate:
+      type: object
+      properties:
+        directoryName:
+          type: string
+          description: The directory name
+        directoryPosition:
+          type: integer
+          description: The position of the directory
+
+    DirectoryDescriptionUpsert:
+      type: object
+      properties:
+        directoryId:
+          type: long
+          description: The directory ID
+        description:
+          type: string
+          description: The directory description
+
+    ImageEntity:
+      type: object
+      properties:
+        imageId:
+          type: integer
+          description: The image ID
+        imageName:
+          type: string
+          description: The image name
+        directory:
+          type: integer
+          description: The directory ID where the image belongs
+        uploadedBy:
+          type: string
+          description: The name of the user who uploaded the image
+        uploadDate:
+          type: long
+          description: The upload date of the image in milliseconds since Unix epoch
+        description:
+          type: string
+          description: Description of the image
+        imageData:
+          type: string
+          format: byte
+          description: Binary image data in base64 format
+
+    ImageDescriptionUpsert:
+      type: object
+      properties:
+        imageId:
+          type: long
+          description: The image ID
+        description:
+          type: string
+          description: The image description
+
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message
+        code:
+          type: integer
+          description: The error code
